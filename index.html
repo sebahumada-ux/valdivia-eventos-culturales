@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a2c59">
+  <meta name="description" content="Prototipo académico de gestión cultural de Valdivia. Creado con HTML, CSS y JavaScript.">
+  <title>Valdivia Cultura | Sistema de Gestión de Eventos — Prototipo EV3</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <div class="demo-ribbon" role="note">
+  </div>
+  <header class="institutional-header">
+    <div class="brand-group">
+      <div class="crest" aria-hidden="true"><svg viewBox="0 0 64 70" fill="none"><path d="M32 3l5 6 8-3 1 9 9 3-5 7 5 9-7 3-1 16-15 12-15-12-1-16-7-3 5-9-5-7 9-3 1-9 8 3z" stroke="currentColor" stroke-width="2.8"/><path d="M18 25h28v23l-14 10-14-10zM32 25v32M18 36h28" stroke="currentColor" stroke-width="2.1"/><path d="m21 10 6 4 5-7 5 7 6-4" stroke="currentColor" stroke-width="2.2"/><path d="m24 30 4 4m12 0-4-4m-12 13 4-4m8 4 4-4" stroke="currentColor" stroke-width="2"/></svg></div>
+      <div class="brand-primary">Municipalidad<br><strong>de Valdivia</strong></div>
+      <span class="brand-line"></span>
+      <div class="brand-department">Área de Cultura<span>Gestión cultural municipal</span></div>
+    </div>
+    <div class="header-landscape" aria-hidden="true"></div>
+    <div class="institutional-label">CASO 11 · DISEÑO ACADÉMICO</div>
+  </header>
+  <div class="app-shell">
+    <aside id="sidebar" class="sidebar" aria-label="Menú principal">
+      <div class="nav-caption">MENÚ PRINCIPAL</div>
+      <nav id="nav" class="navigation">
+        <button class="nav-link is-active" data-route="inicio" type="button"><span data-icon="home"></span>Inicio</button>
+        <button class="nav-link" data-route="eventos" type="button"><span data-icon="calendar"></span>Eventos</button>
+        <button class="nav-link" data-route="recintos" type="button"><span data-icon="building"></span>Recintos</button>
+        <button class="nav-link" data-route="inscripciones" type="button"><span data-icon="users"></span>Inscripciones</button>
+        <button class="nav-link" data-route="proveedores" type="button"><span data-icon="box"></span>Proveedores</button>
+        <button class="nav-link" data-route="reportes" type="button"><span data-icon="chart"></span>Reportes</button>
+        <button class="nav-link" data-route="usuarios" type="button"><span data-icon="user"></span>Usuarios y roles</button>
+      </nav>
+      <div class="sidebar-rule"></div>
+      <div class="nav-caption">EXPLORAR</div>
+      <nav class="navigation"><button class="nav-link" data-route="publico" type="button"><span data-icon="globe"></span>Cartelera ciudadana</button></nav>
+      <div class="sidebar-promo">
+        <span class="promo-kicker">PROYECTO ACADÉMICO</span>
+        <strong>Valdivia más conectada con la cultura.</strong>
+        <p>Un sistema centralizado para organizar la actividad cultural.</p>
+      </div>
+      <div class="sidebar-landmark" aria-hidden="true"><svg viewBox="0 0 240 130"><path d="M0 120V94l30-7 19 9 25-35 30 36 27-5 28-32 31 32 20-8 30 8v28Z" fill="#35699d" opacity=".65"/><path d="M0 119h240M20 106V91h30v15M78 106V80h36v26M158 105V88h33v17M112 85v-19l21-12 21 12v19M127 78h15" fill="none" stroke="#91b6d8" stroke-width="3"/><path d="M0 125c40-10 80-9 120 0s80-9 120 0" stroke="#6f9dc9" stroke-width="2" fill="none"/></svg></div>
+      <div class="sidebar-footer">Diseño de interfaz · V3<br><span>HTML · CSS · JavaScript</span></div>
+    </aside>
+
+    <main class="main-content" id="main" tabindex="-1">
+      <div class="mobile-topbar"><button class="icon-btn" id="menuToggle" aria-label="Abrir menú" aria-expanded="false" type="button"><span data-icon="menu"></span></button><strong>Cultura Valdivia</strong><span class="demo-mini">DEMO</span></div>
+      <div class="app-toolbar">
+        <div class="headline">
+          <div class="headline-icon" data-icon="calendar"></div>
+          <div><div class="eyebrow" id="sectionEyebrow">GESTIÓN CULTURAL / PANEL GENERAL</div><h1 id="sectionTitle">Sistema de Gestión de Eventos Culturales</h1><p id="sectionSubtitle">Plataforma para planificar, administrar y consultar actividades culturales.</p></div>
+        </div>
+        <div class="toolbar-actions">
+          <button type="button" class="btn btn-primary" id="newEvent"><span data-icon="plus"></span><span class="hide-mobile">Nuevo evento</span><span class="only-mobile">Crear</span></button>
+          <button type="button" class="icon-btn notification-btn" id="notifications" aria-label="Ver avisos"><span data-icon="bell"></span><i></i></button>
+          <div class="separator"></div>
+          <span class="profile-avatar">AC</span><div class="profile-label"><strong>Área de Cultura</strong><small>Rol de demostración</small></div>
+        </div>
+      </div>
+      <div id="view"></div>
+      <footer class="app-footer"><span>Prototipo desarrollado con HTML, CSS y JS · Datos almacenados en este navegador</span><span>Proyecto académico · EV3 Noviembre 2026</span></footer>
+    </main>
+  </div>
+  <div class="mobile-scrim" id="mobileScrim" hidden></div>
+  <dialog class="dialog" id="dialog" aria-labelledby="dialogTitle"><div class="dialog-content" id="dialogContent"></div></dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
