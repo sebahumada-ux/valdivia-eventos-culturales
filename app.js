@@ -1,131 +1,1384 @@
+
 /*
   Sistema de Gestión de Eventos Culturales · Municipalidad de Valdivia
   PROTOTIPO ACADÉMICO para la EV3 2026. Solo front-end: NO existe servidor,
   acceso municipal, pago, autenticación ni dato real.
   Los registros ficticios se guardan en localStorage del navegador.
 */
+
 'use strict';
-const STORE='valdivia_ev3_dashboard_pro_v3';
-const ICONS={
-  home:'<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/>',
-  calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/>',
-  building:'<path d="m3 10 9-7 9 7M4 10h16M6 10v9M10 10v9M14 10v9M18 10v9M3 21h18"/>',
-  users:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
-  box:'<path d="m12 2 9 5-9 5-9-5 9-5ZM3 7v10l9 5 9-5V7M12 12v10"/>',
-  chart:'<path d="M3 3v18h18M8 17v-5M13 17V7M18 17v-9"/>',
-  user:'<circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/>',
-  globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/>',
-  bell:'<path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/>',
-  plus:'<path d="M12 5v14M5 12h14"/>',
-  menu:'<path d="M4 6h16M4 12h16M4 18h16"/>',
-  chevronLeft:'<path d="m14 18-6-6 6-6"/>',
-  chevronRight:'<path d="m10 18 6-6-6-6"/>',
-  arrow:'<path d="M5 12h14m-6-6 6 6-6 6"/>',
-  check:'<path d="m5 12 4 4L19 6"/>',
-  circle:'<circle cx="12" cy="12" r="9"/>',
-  shield:'<path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/>',
-  grid:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
-  ticket:'<path d="M4 5h16v5a2 2 0 0 0 0 4v5H4v-5a2 2 0 0 0 0-4zM12 5v2M12 11v2M12 17v2"/>',
-  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l4 2"/>',
-  location:'<path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/>',
-  file:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M8 13h8M8 17h8"/>',
-  search:'<circle cx="10.5" cy="10.5" r="7.5"/><path d="m16 16 5 5"/>',
-  x:'<path d="M5 5l14 14M19 5 5 19"/>',
-  save:'<path d="M4 4h14l2 2v14H4zM8 4v6h9V4M8 20v-7h8v7"/>',
-  download:'<path d="M12 3v12m-5-5 5 5 5-5M4 17v4h16v-4"/>',
-  refresh:'<path d="M20 7v5h-5M4 17v-5h5M5.5 8a7 7 0 0 1 12-2L20 12M4 12l2.5 6a7 7 0 0 0 12-2"/>',
-  info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/>',
-  layers:'<path d="m12 2 9 5-9 5-9-5 9-5ZM3 12l9 5 9-5M3 17l9 5 9-5"/>',
-  edit:'<path d="m15 5 4 4M4 20l4-1 12-12-3-3L5 16z"/>',
-  trash:'<path d="M3 6h18M8 6V4h8v2M6 6l1 15h10l1-15M10 10v7M14 10v7"/>',
-  spark:'<path d="m12 2 2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4z"/>'
+
+const STORE = 'valdivia_ev3_dashboard_pro_v3';
+
+const ICONS = {
+  home: '<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/>',
+  calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/>',
+  building: '<path d="m3 10 9-7 9 7M4 10h16M6 10v9M10 10v9M14 10v9M18 10v9M3 21h18"/>',
+  users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
+  box: '<path d="m12 2 9 5-9 5-9-5 9-5ZM3 7v10l9 5 9-5V7M12 12v10"/>',
+  chart: '<path d="M3 3v18h18M8 17v-5M13 17V7M18 17v-9"/>',
+  user: '<circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/>',
+  globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/>',
+  bell: '<path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>',
+  menu: '<path d="M4 6h16M4 12h16M4 18h16"/>',
+  chevronLeft: '<path d="m14 18-6-6 6-6"/>',
+  chevronRight: '<path d="m10 18 6-6-6-6"/>',
+  arrow: '<path d="M5 12h14m-6-6 6 6-6 6"/>',
+  check: '<path d="m5 12 4 4L19 6"/>',
+  circle: '<circle cx="12" cy="12" r="9"/>',
+  shield: '<path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/>',
+  grid: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
+  ticket: '<path d="M4 5h16v5a2 2 0 0 0 0 4v5H4v-5a2 2 0 0 0 0-4zM12 5v2M12 11v2M12 17v2"/>',
+  clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l4 2"/>',
+  location: '<path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/>',
+  file: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M8 13h8M8 17h8"/>',
+  search: '<circle cx="10.5" cy="10.5" r="7.5"/><path d="m16 16 5 5"/>',
+  x: '<path d="M5 5l14 14M19 5 5 19"/>',
+  save: '<path d="M4 4h14l2 2v14H4zM8 4v6h9V4M8 20v-7h8v7"/>',
+  download: '<path d="M12 3v12m-5-5 5 5 5-5M4 17v4h16v-4"/>',
+  refresh: '<path d="M20 7v5h-5M4 17v-5h5M5.5 8a7 7 0 0 1 12-2L20 12M4 12l2.5 6a7 7 0 0 0 12-2"/>',
+  info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/>',
+  layers: '<path d="m12 2 9 5-9 5-9-5 9-5ZM3 12l9 5 9-5M3 17l9 5 9-5"/>',
+  edit: '<path d="m15 5 4 4M4 20l4-1 12-12-3-3L5 16z"/>',
+  trash: '<path d="M3 6h18M8 6V4h8v2M6 6l1 15h10l1-15M10 10v7M14 10v7"/>',
+  spark: '<path d="m12 2 2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4z"/>'
 };
-const ico=(n,s=20)=>`<svg class="icon" viewBox="0 0 24 24" width="${s}" height="${s}" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n]||ICONS.circle}</svg>`;
-const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const byId=id=>document.getElementById(id);
-const VENUES=[
-  {id:'v1',name:'Teatro Cultural (demo)',type:'Teatro / sala',capacity:320,zone:'Centro'},
-  {id:'v2',name:'Parque del Río (demo)',type:'Espacio abierto',capacity:900,zone:'Costanera'},
-  {id:'v3',name:'Centro Comunitario (demo)',type:'Sala multiuso',capacity:180,zone:'Barrio norte'},
-  {id:'v4',name:'Biblioteca Cultural (demo)',type:'Sala de talleres',capacity:65,zone:'Centro'},
-  {id:'v5',name:'Plaza Cultural (demo)',type:'Espacio abierto',capacity:600,zone:'Barrio sur'}
+
+const ico = (n, s = 20) =>
+  `<svg class="icon" viewBox="0 0 24 24" width="${s}" height="${s}" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n] || ICONS.circle}</svg>`;
+
+const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;'
+}[c]));
+
+const byId = id => document.getElementById(id);
+
+const VENUES = [
+  { id: 'v1', name: 'Teatro Cultural (demo)', type: 'Teatro / sala', capacity: 320, zone: 'Centro' },
+  { id: 'v2', name: 'Parque del Río (demo)', type: 'Espacio abierto', capacity: 900, zone: 'Costanera' },
+  { id: 'v3', name: 'Centro Comunitario (demo)', type: 'Sala multiuso', capacity: 180, zone: 'Barrio norte' },
+  { id: 'v4', name: 'Biblioteca Cultural (demo)', type: 'Sala de talleres', capacity: 65, zone: 'Centro' },
+  { id: 'v5', name: 'Plaza Cultural (demo)', type: 'Espacio abierto', capacity: 600, zone: 'Barrio sur' }
 ];
-const SEED_EVENTS=[
-  {id:'e-01',name:'Encuentro de teatro y comunidad',category:'Teatro',date:'2026-11-12',start:'18:00',end:'20:00',venue:'v1',capacity:200,status:'Programado',description:'Actividad de muestra para ilustrar la programación cultural.'},
-  {id:'e-02',name:'Feria del libro y autores',category:'Feria',date:'2026-11-16',start:'10:00',end:'15:00',venue:'v2',capacity:500,status:'Programado',description:'Espacio ficticio para lectura, talleres y conversación.'},
-  {id:'e-03',name:'Concierto de música local',category:'Música',date:'2026-11-19',start:'19:00',end:'21:00',venue:'v1',capacity:240,status:'Programado',description:'Presentación musical de demostración.'},
-  {id:'e-04',name:'Taller de artes visuales',category:'Taller',date:'2026-11-23',start:'15:00',end:'17:00',venue:'v4',capacity:35,status:'Programado',description:'Actividad práctica de expresión artística.'},
-  {id:'e-05',name:'Festival barrial de cultura',category:'Comunidad',date:'2026-12-03',start:'12:00',end:'18:00',venue:'v5',capacity:350,status:'Programado',description:'Muestra de encuentro comunitario, solo para el prototipo.'}
+
+const SEED_EVENTS = [
+  {
+    id: 'e-01',
+    name: 'Encuentro de teatro y comunidad',
+    category: 'Teatro',
+    date: '2026-11-12',
+    start: '18:00',
+    end: '20:00',
+    venue: 'v1',
+    capacity: 200,
+    status: 'Programado',
+    description: 'Actividad de muestra para ilustrar la programación cultural.'
+  },
+  {
+    id: 'e-02',
+    name: 'Feria del libro y autores',
+    category: 'Feria',
+    date: '2026-11-16',
+    start: '10:00',
+    end: '15:00',
+    venue: 'v2',
+    capacity: 500,
+    status: 'Programado',
+    description: 'Espacio ficticio para lectura, talleres y conversación.'
+  },
+  {
+    id: 'e-03',
+    name: 'Concierto de música local',
+    category: 'Música',
+    date: '2026-11-19',
+    start: '19:00',
+    end: '21:00',
+    venue: 'v1',
+    capacity: 240,
+    status: 'Programado',
+    description: 'Presentación musical de demostración.'
+  },
+  {
+    id: 'e-04',
+    name: 'Taller de artes visuales',
+    category: 'Taller',
+    date: '2026-11-23',
+    start: '15:00',
+    end: '17:00',
+    venue: 'v4',
+    capacity: 35,
+    status: 'Programado',
+    description: 'Actividad práctica de expresión artística.'
+  },
+  {
+    id: 'e-05',
+    name: 'Festival barrial de cultura',
+    category: 'Comunidad',
+    date: '2026-12-03',
+    start: '12:00',
+    end: '18:00',
+    venue: 'v5',
+    capacity: 350,
+    status: 'Programado',
+    description: 'Muestra de encuentro comunitario, solo para el prototipo.'
+  }
 ];
-// Tareas administrativas ilustrativas del Área de Cultura. No son compromisos reales de la Municipalidad.
-const TASKS=[
-  {id:'muni-01',title:'Confirmar disponibilidad de recintos para los próximos eventos',due:'Coordinación de recintos · demo'},
-  {id:'muni-02',title:'Revisar cupos y solicitudes de inscripción',due:'Atención a participantes · demo'},
-  {id:'muni-03',title:'Coordinar equipamiento y servicios con proveedores',due:'Logística cultural · demo'},
-  {id:'muni-04',title:'Actualizar la cartelera de actividades culturales',due:'Programación · demo'},
-  {id:'muni-05',title:'Preparar el informe de asistencia y participación',due:'Reportes · demo'}
+
+const TASKS = [
+  { id: 'muni-01', title: 'Confirmar disponibilidad de recintos para los próximos eventos', due: 'Coordinación de recintos · demo' },
+  { id: 'muni-02', title: 'Revisar cupos y solicitudes de inscripción', due: 'Atención a participantes · demo' },
+  { id: 'muni-03', title: 'Coordinar equipamiento y servicios con proveedores', due: 'Logística cultural · demo' },
+  { id: 'muni-04', title: 'Actualizar la cartelera de actividades culturales', due: 'Programación · demo' },
+  { id: 'muni-05', title: 'Preparar el informe de asistencia y participación', due: 'Reportes · demo' }
 ];
-function seed(){return {events:SEED_EVENTS.map(x=>({...x})),regs:[],providers:[{id:'p1',name:'Proveedor de sonido (demo)',service:'Audio y sonido',contact:'Contacto por definir'},{id:'p2',name:'Montaje cultural (demo)',service:'Equipamiento',contact:'Contacto por definir'}],tasksDone:[]};}
-function load(){try{const x=JSON.parse(localStorage.getItem(STORE));if(x&&Array.isArray(x.events)&&Array.isArray(x.regs)&&Array.isArray(x.providers)&&Array.isArray(x.tasksDone))return x;}catch(_){/* almacenamiento opcional */}return seed();}
-let data=load(),route='inicio',calYear=2026,calMonth=10,selectedDate=null;
-function save(){try{localStorage.setItem(STORE,JSON.stringify(data));}catch(_){toast('El navegador no permite guardar los cambios de esta sesión.');}}
-function vname(id){return VENUES.find(x=>x.id===id)?.name||'Recinto sin identificar';}
-function fmtDate(raw){if(!raw)return '—';const [y,m,d]=raw.split('-').map(Number);return new Intl.DateTimeFormat('es-CL',{day:'2-digit',month:'short',year:'numeric'}).format(new Date(y,m-1,d));}
-function sortEvents(){return [...data.events].sort((a,b)=>(a.date+' '+a.start).localeCompare(b.date+' '+b.start));}
-function occupied(id){return data.regs.filter(x=>x.eventId===id).length;}
-function available(e){return Math.max(0,Number(e.capacity||0)-occupied(e.id));}
-function statCard(label,num,icon,type='',caption='Datos simulados'){return `<article class="card stat-card"><div class="stat-icon ${type}">${ico(icon)}</div><div><div class="stat-label">${esc(label)}</div><div class="stat-value">${esc(num)}</div><div class="stat-note">${esc(caption)}</div></div></article>`;}
-function statusPill(s){return `<span class="pill ${s==='Programado'?'green':'slate'}">${esc(s||'Programado')}</span>`;}
-function eventArt(cat){const color={Teatro:'#7758b7',Feria:'#c38d4c',Música:'#365dac',Taller:'#288e87',Comunidad:'#5b84a2'}[cat]||'#426bab';return `<span class="tiny-category-icon" style="background:${color}">${ico(cat==='Música'?'spark':cat==='Feria'?'box':'calendar')}</span>`;}
-function buttonsCard(e){return `<button type="button" class="table-action" data-action="details" data-id="${esc(e.id)}">Ver detalles</button>`;}
-function eventRows(list,mode='simple'){
-  if(!list.length)return '<tr><td colspan="7" class="empty-state">No hay eventos de demostración para estos filtros.</td></tr>';
-  return list.map(e=>`<tr><td class="title-cell">${eventArt(e.category)}<span class="event-title">${esc(e.name)}<span class="tiny-muted">${esc(e.category)}</span></span></td><td>${esc(fmtDate(e.date))}</td><td>${esc(vname(e.venue))}</td><td>${occupied(e.id)}/${esc(e.capacity)}</td><td>${statusPill(e.status)}</td><td>${buttonsCard(e)}${mode==='full'?` <button type="button" class="table-action danger" data-action="delete-event" data-id="${esc(e.id)}">Eliminar</button>`:''}</td></tr>`).join('');
+
+function seed() {
+  return {
+    events: SEED_EVENTS.map(x => ({ ...x })),
+    regs: [],
+    providers: [
+      { id: 'p1', name: 'Proveedor de sonido (demo)', service: 'Audio y sonido', contact: 'Contacto por definir' },
+      { id: 'p2', name: 'Montaje cultural (demo)', service: 'Equipamiento', contact: 'Contacto por definir' }
+    ],
+    tasksDone: []
+  };
 }
-function eventTable(items,mode='simple'){return `<div class="table-wrap"><table class="data-table"><thead><tr><th>Evento</th><th>Fecha</th><th>Recinto</th><th>Inscritos / cupos</th><th>Estado</th><th>Acción</th></tr></thead><tbody id="eventsTbody">${eventRows(items,mode)}</tbody></table></div>`;}
-function homeEventTable(items){
-  return `<div class="table-wrap"><table class="data-table home-table"><thead><tr><th>Evento</th><th>Fecha y recinto</th><th>Cupos</th></tr></thead><tbody>${items.map(e=>`<tr><td class="title-cell">${eventArt(e.category)}<span class="event-title"><button class="home-event-link" type="button" data-action="details" data-id="${esc(e.id)}">${esc(e.name)}</button><span class="tiny-muted">${esc(e.category)} · Programado</span></span></td><td class="place-cell"><strong>${esc(fmtDate(e.date))}</strong><span class="tiny-muted">${esc(vname(e.venue))}</span></td><td>${occupied(e.id)} / ${esc(e.capacity)}</td></tr>`).join('')}</tbody></table></div>`;
+
+function load() {
+  try {
+    const x = JSON.parse(localStorage.getItem(STORE));
+    if (
+      x &&
+      Array.isArray(x.events) &&
+      Array.isArray(x.regs) &&
+      Array.isArray(x.providers) &&
+      Array.isArray(x.tasksDone)
+    ) return x;
+  } catch (_) {}
+  return seed();
 }
-function headPanel(title,icon,linkText='',r=''){return `<div class="panel-heading"><h2>${ico(icon)} ${esc(title)}</h2>${linkText?`<button class="text-button" type="button" data-route="${esc(r)}">${esc(linkText)} →</button>`:''}</div>`;}
-function monthKey(date){return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;}
-function calendarHTML(){
-  const monthStart=new Date(calYear,calMonth,1);const monName=new Intl.DateTimeFormat('es-CL',{month:'long',year:'numeric'}).format(monthStart);const offset=(monthStart.getDay()+6)%7;const days=new Date(calYear,calMonth+1,0).getDate();const cells=[];
-  for(let i=0;i<42;i++){const d=new Date(calYear,calMonth,1-offset+i);const key=monthKey(d);const has=data.events.some(e=>e.date===key);const active=selectedDate===key;cells.push(`<button class="day-cell ${d.getMonth()!==calMonth?'outside':''} ${has?'has-event':''} ${active?'selected':''}" data-action="calendar-date" data-date="${key}" title="${esc(fmtDate(key))}${has?' · evento(s) demo':''}" type="button">${d.getDate()}${has?'<span class="day-dot"></span>':''}</button>`);}
-  const selection=selectedDate?`Fecha seleccionada: ${fmtDate(selectedDate)} · ${data.events.filter(e=>e.date===selectedDate).length} evento(s) demo`:'Selecciona un día para consultar la agenda';
-  return `${headPanel('Agenda cultural','calendar')}<div class="month-control"><button class="small-icon-btn" aria-label="Mes anterior" data-action="prev-month" type="button">${ico('chevronLeft')}</button><strong>${esc(monName)}</strong><button class="small-icon-btn" aria-label="Mes siguiente" data-action="next-month" type="button">${ico('chevronRight')}</button></div><div class="calendar-weekdays">${['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'].map(x=>`<span>${x}</span>`).join('')}</div><div class="calendar-days">${cells.join('')}</div><div class="calendar-legend"><span><b class="legend-swatch"></b> Eventos demo</span><span><b class="legend-swatch dark"></b> Selección</span></div><div class="calendar-caption">${esc(selection)}</div>`;
+
+let data = load();
+let route = 'inicio';
+let calYear = 2026;
+let calMonth = 10;
+let selectedDate = null;
+
+function save() {
+  try {
+    localStorage.setItem(STORE, JSON.stringify(data));
+  } catch (_) {
+    toast('El navegador no permite guardar los cambios de esta sesión.');
+  }
 }
-function taskList(){return TASKS.map(t=>`<label class="task-row ${data.tasksDone.includes(t.id)?'is-done':''}"><input type="checkbox" data-task="${t.id}" ${data.tasksDone.includes(t.id)?'checked':''}><span>${esc(t.title)}<small>${esc(t.due)}</small></span></label>`).join('');}
-function culturalOperationsStatus(){
-  const pending=TASKS.filter(t=>!data.tasksDone.includes(t.id)).length;
-  const noRegistrations=data.events.filter(e=>occupied(e.id)===0).length;
-  const fullEvents=data.events.filter(e=>available(e)===0).length;
-  return `<article class="card progress-panel"><h2>${ico('layers')} Seguimiento de la gestión cultural</h2><div class="status-callout"><strong>Resumen operativo de demostración</strong><p>Tareas y eventos de ejemplo guardados en este navegador. No son datos ni gestiones oficiales de la municipalidad.</p></div><div class="progress-steps"><div class="progress-step ${pending?'pending':''}">${ico(pending?'circle':'check')}<span>Coordinaciones pendientes: <strong>${pending}</strong> de ${TASKS.length}</span></div><div class="progress-step ${noRegistrations?'pending':''}">${ico(noRegistrations?'circle':'check')}<span>Eventos sin inscripciones: <strong>${noRegistrations}</strong></span></div><div class="progress-step ${fullEvents?'pending':''}">${ico(fullEvents?'circle':'check')}<span>Eventos sin cupos disponibles: <strong>${fullEvents}</strong></span></div><div class="progress-step">${ico('info')}<span>Revisar los módulos de Eventos, Recintos y Reportes para obtener más detalle.</span></div></div></article>`;
+
+function vname(id) {
+  return VENUES.find(x => x.id === id)?.name || 'Recinto sin identificar';
 }
-const MODULES=[{name:'Gestión de eventos',desc:'Planificación y programación cultural',icon:'calendar',route:'eventos',c:''},{name:'Recintos',desc:'Capacidad y disponibilidad de espacios',icon:'building',route:'recintos',c:'m1'},{name:'Inscripciones',desc:'Registro y control de cupos',icon:'users',route:'inscripciones',c:'m2'},{name:'Proveedores',desc:'Servicios y coordinación',icon:'box',route:'proveedores',c:'m3'},{name:'Reportes',desc:'Consultas e indicadores del sistema',icon:'chart',route:'reportes',c:'m4'}];
-function homeHTML(){const items=sortEvents().slice(0,5);return `<section class="stats-grid">${statCard('Eventos registrados',data.events.length,'calendar','','Actividades de demostración')}${statCard('Recintos',VENUES.length,'building','purple','Alcance inicial: 5 recintos')}${statCard('Inscripciones',data.regs.length,'users','mint','Registros locales de prueba')}${statCard('Tipos de reportes',3,'chart','gold','Consultas de demostración')}</section><section class="dashboard-grid"><article class="card section-panel">${headPanel('Próximos eventos culturales','calendar','Ver todos los eventos','eventos')}${homeEventTable(items)}</article><article class="card calendar-panel" id="calendarPanel">${calendarHTML()}</article><div class="right-stack"><article class="card">${headPanel('Tareas del Área de Cultura','file','Ver reportes','reportes')}<p class="task-context">Actividades ilustrativas de coordinación municipal, no compromisos oficiales.</p><div class="task-list" id="taskList">${taskList()}</div></article>${culturalOperationsStatus()}</div></section><section class="card modules-panel"><h2>${ico('grid')} Módulos del sistema</h2><div class="modules-grid">${MODULES.map(m=>`<button class="module-tile ${m.c}" data-route="${m.route}" type="button"><span class="module-icon">${ico(m.icon)}</span><span><strong>${m.name}</strong>${m.desc}</span></button>`).join('')}</div></section>`;}
-function eventsHTML(){return `<div class="page-row"><div><h2>Eventos culturales de demostración</h2><p>Consulta, crea o elimina eventos de prueba. Se validan capacidad y horarios.</p></div><div class="search-controls"><input id="eventSearch" class="field search-input" placeholder="Buscar evento o recinto" aria-label="Buscar eventos"><select id="eventCategory" class="field" aria-label="Filtrar categoría"><option value="">Todas las categorías</option>${['Teatro','Música','Feria','Taller','Comunidad','Exposición'].map(c=>`<option>${c}</option>`).join('')}</select></div></div><article class="card data-card">${eventTable(sortEvents(),'full')}</article><div class="hint-box">${ico('info')} Los eventos aquí mostrados son completamente ficticios. Al crear uno, el sistema comprueba que el recinto no esté ocupado en ese mismo horario y que los cupos no superen su capacidad.</div>`;}
-function venueHTML(){return `<div class="page-row"><div><h2>Recintos culturales</h2><p>Cinco recintos referenciales, correspondientes al alcance inicial del caso.</p></div></div><div class="page-grid">${VENUES.map(v=>{const ev=data.events.filter(e=>e.venue===v.id);return `<article class="card venue-card"><div class="room-icon">${ico('building')}</div><h3>${esc(v.name)}</h3><p>${esc(v.type)} · Zona de ejemplo: ${esc(v.zone)}. Capacidad y reservas ficticias para probar restricciones.</p><div class="venue-info"><span>Capacidad de prueba</span><strong>${v.capacity} personas</strong></div><div class="venue-info"><span>Eventos asignados</span><strong>${ev.length}</strong></div><button class="btn btn-ghost" style="margin-top:15px" type="button" data-action="venue-details" data-id="${v.id}">Consultar disponibilidad ${ico('arrow')}</button></article>`;}).join('')}</div>`;}
-function registrationsHTML(){const rs=[...data.regs].reverse();return `<div class="page-row"><div><h2>Inscripciones de prueba</h2><p>El registro se guarda únicamente en el navegador y nunca llega a la municipalidad.</p></div><button class="btn btn-ghost" data-route="publico" type="button">${ico('ticket')} Inscribir asistente</button></div><article class="card data-card"><div class="table-wrap"><table class="data-table"><thead><tr><th>Participante</th><th>Evento</th><th>Fecha</th><th>Correo de prueba</th><th>Acción</th></tr></thead><tbody>${rs.length?rs.map(r=>{const e=data.events.find(e=>e.id===r.eventId);return `<tr><td>${esc(r.name)}</td><td>${esc(e?.name||'Evento eliminado')}</td><td>${esc(e?fmtDate(e.date):'—')}</td><td>${esc(r.email)}</td><td><button class="table-action danger" type="button" data-action="cancel-reg" data-id="${esc(r.id)}">Cancelar</button></td></tr>`;}).join(''):'<tr><td colspan="5" class="empty-state"><strong>Sin inscripciones de prueba todavía</strong>Abre Cartelera ciudadana, elige un evento y registra un alias ficticio.</td></tr>'}</tbody></table></div></article>`;}
-function providersHTML(){return `<div class="page-row"><div><h2>Proveedores y servicios</h2><p>Listado ilustrativo: todavía no hay contratos ni datos municipales reales.</p></div><button class="btn btn-primary" type="button" data-action="add-provider">${ico('plus')} Añadir proveedor demo</button></div><div class="page-grid">${data.providers.map(p=>`<article class="card mini-card"><div class="room-icon" style="background:#fff2e2;color:#af7b23">${ico('box')}</div><h3>${esc(p.name)}</h3><p><strong>Servicio:</strong> ${esc(p.service)}<br><strong>Contacto:</strong> ${esc(p.contact)}</p><button class="btn btn-danger" data-action="delete-provider" data-id="${esc(p.id)}" type="button">${ico('trash')} Eliminar de prueba</button></article>`).join('')}</div>${data.providers.length?'':'<div class="empty-state">No hay proveedores de demostración.</div>'}`;}
-function reportsHTML(){const byCat={};for(const e of data.events)byCat[e.category]=(byCat[e.category]||0)+1;const max=Math.max(1,...Object.values(byCat));const totalSeats=data.events.reduce((s,e)=>s+Number(e.capacity||0),0);return `<div class="page-row"><div><h2>Reportes del prototipo</h2><p>Indicadores calculados sobre los eventos e inscripciones locales de ejemplo.</p></div><button class="btn btn-primary" type="button" data-action="csv">${ico('download')} Exportar CSV demo</button></div><section class="stats-grid">${statCard('Eventos demo',data.events.length,'calendar')}${statCard('Recintos',VENUES.length,'building','purple')}${statCard('Inscripciones demo',data.regs.length,'users','mint')}${statCard('Cupos definidos',totalSeats,'ticket','gold')}</section><section class="report-grid"><article class="card chart-box"><h3>Eventos por categoría</h3>${Object.entries(byCat).length?Object.entries(byCat).map(([cat,n])=>`<div class="bar-line"><div class="bar-title"><span>${esc(cat)}</span><strong>${n}</strong></div><div class="bar-rail"><div class="bar-fill" style="width:${n/max*100}%"></div></div></div>`).join(''):'<p class="empty-state">Sin eventos.</p>'}</article><article class="card chart-box"><h3>Inscripciones por evento</h3>${sortEvents().map(e=>`<div class="bar-line"><div class="bar-title"><span>${esc(e.name)}</span><strong>${occupied(e.id)}/${e.capacity}</strong></div><div class="bar-rail"><div class="bar-fill" style="width:${Math.max(occupied(e.id)/e.capacity*100,0)}%"></div></div></div>`).join('')}</article></section><div class="hint-box">Los indicadores se calculan sobre datos ficticios creados para probar la interfaz; no representan actividad municipal real. <button class="text-button" data-action="reset" type="button">Restablecer datos de demostración</button></div>`;}
-function usersHTML(){const cols=['Ciudadanía','Cultura','TI municipal'];const rows=[['Consultar eventos',[1,1,1]],['Inscribirse en eventos',[1,1,0]],['Crear y editar eventos',[0,1,0]],['Asignar recintos',[0,1,0]],['Consultar reportes internos',[0,1,1]],['Administrar cuentas',[0,0,1]]];return `<div class="page-row"><div><h2>Roles y permisos propuestos</h2><p>Matriz de diseño para validar con el Área de Cultura y TI; no hay autenticación implementada.</p></div></div><article class="card data-card"><div class="table-wrap"><table class="data-table permission-table"><thead><tr><th>Permiso</th>${cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${rows.map(([title,flags])=>`<tr><td>${title}</td>${flags.map(flag=>`<td class="${flag?'ok':'no'}">${flag?'✓':'—'}</td>`).join('')}</tr>`).join('')}</tbody></table></div></article><div class="hint-box">${ico('shield')} Los roles son una propuesta técnica. Este prototipo no incluye inicio de sesión, permisos verdaderos, protección de datos ni acceso a infraestructura municipal.</div>`;}
-function publicHTML(){return `<div class="page-row"><div><h2>Cartelera cultural ciudadana</h2><p>Experiencia pública de demostración para explorar eventos e inscribirse con un alias ficticio.</p></div></div><div class="public-list">${sortEvents().map((e,i)=>`<article class="card public-card"><div class="public-visual" style="background:${['linear-gradient(135deg,#4c5da3,#b593d8)','linear-gradient(135deg,#99703e,#e6c98d)','linear-gradient(135deg,#14578d,#6badd6)','linear-gradient(135deg,#257f75,#9dd3cb)','linear-gradient(135deg,#976c69,#dba29c)'][i%5]}"><strong>${esc(e.category)}</strong></div><div class="public-body"><span class="pill">${esc(fmtDate(e.date))}</span><h3 style="margin-top:12px">${esc(e.name)}</h3><p>${ico('location',14)} ${esc(vname(e.venue))}<br>${ico('clock',14)} ${esc(e.start)}–${esc(e.end)} · ${available(e)} cupos demo</p><button type="button" class="btn btn-primary" data-action="details" data-id="${esc(e.id)}">Detalles e inscripción ${ico('arrow')}</button></div></article>`).join('')}</div>`;}
-const PAGES={inicio:{name:'Sistema de Gestión de Eventos Culturales',sub:'Plataforma para planificar, administrar y consultar actividades culturales.',eyebrow:'GESTIÓN CULTURAL / PANEL GENERAL',icon:'calendar'},eventos:{name:'Gestión de eventos',sub:'Administración de actividades y programación cultural.',eyebrow:'OPERACIÓN / EVENTOS',icon:'calendar'},recintos:{name:'Gestión de recintos',sub:'Espacios, capacidades y horarios disponibles.',eyebrow:'OPERACIÓN / RECINTOS',icon:'building'},inscripciones:{name:'Inscripciones y cupos',sub:'Participantes de demostración y control de reservas.',eyebrow:'OPERACIÓN / INSCRIPCIONES',icon:'users'},proveedores:{name:'Proveedores',sub:'Organización de servicios necesarios para cada evento.',eyebrow:'COORDINACIÓN / PROVEEDORES',icon:'box'},reportes:{name:'Reportes e indicadores',sub:'Consultas basadas en datos ficticios de la aplicación.',eyebrow:'ANÁLISIS / REPORTES',icon:'chart'},usuarios:{name:'Roles y permisos',sub:'Diseño preliminar de los perfiles del sistema.',eyebrow:'ADMINISTRACIÓN / SEGURIDAD',icon:'shield'},publico:{name:'Cartelera ciudadana',sub:'Exploración e inscripción cultural de demostración.',eyebrow:'VISTA PÚBLICA / CIUDADANÍA',icon:'globe'}};
-function closeMenu(){byId('sidebar').classList.remove('open');byId('mobileScrim').hidden=true;byId('menuToggle').setAttribute('aria-expanded','false');}
-function navigate(r){route=PAGES[r]?r:'inicio';location.hash=`/${route}`;render();closeMenu();window.scrollTo({top:0,behavior:'auto'});}
-function render(){const meta=PAGES[route]||PAGES.inicio;byId('sectionTitle').textContent=meta.name;byId('sectionSubtitle').textContent=meta.sub;byId('sectionEyebrow').textContent=meta.eyebrow;byId('view').innerHTML=({inicio:homeHTML,eventos:eventsHTML,recintos:venueHTML,inscripciones:registrationsHTML,proveedores:providersHTML,reportes:reportsHTML,usuarios:usersHTML,publico:publicHTML}[route]||homeHTML)();document.querySelectorAll('[data-icon]').forEach(e=>{const n=e.dataset.icon;e.innerHTML=ico(n);});document.querySelectorAll('[data-route]').forEach(el=>el.classList.toggle('is-active',el.dataset.route===route));}
-function toast(text){const el=byId('toast');el.textContent=text;el.classList.add('visible');clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.remove('visible'),3600);}
-function modal(html){byId('dialogContent').innerHTML=html;byId('dialog').showModal();}
-function modalHeading(title,desc){return `<div class="dialog-top"><div><h2 id="dialogTitle">${esc(title)}</h2><p>${esc(desc)}</p></div><button type="button" class="dialog-close" data-action="close-modal" aria-label="Cerrar">${ico('x')}</button></div>`;}
-function eventForm(id){const e=id?data.events.find(x=>x.id===id):null;modal(`${modalHeading(e?'Editar evento':'Nuevo evento cultural','Solo demostración; no se conecta con un servidor.')}<form id="eventForm" data-edit="${esc(id||'')}"><div class="form-grid"><label class="form-label full">Nombre del evento<input name="name" required maxlength="90" value="${esc(e?.name||'')}" placeholder="Ej.: Festival de artes comunitarias"></label><label class="form-label">Categoría<select name="category">${['Teatro','Música','Feria','Taller','Comunidad','Exposición'].map(c=>`<option ${e?.category===c?'selected':''}>${c}</option>`).join('')}</select></label><label class="form-label">Recinto<select name="venue">${VENUES.map(v=>`<option value="${v.id}" ${e?.venue===v.id?'selected':''}>${esc(v.name)} · ${v.capacity} máx.</option>`).join('')}</select></label><label class="form-label">Fecha<input type="date" name="date" required value="${esc(e?.date||'2026-11-25')}"></label><label class="form-label">Cupos<input type="number" min="1" name="capacity" required value="${esc(e?.capacity||'60')}"></label><label class="form-label">Inicio<input type="time" name="start" required value="${esc(e?.start||'17:00')}"></label><label class="form-label">Término<input type="time" name="end" required value="${esc(e?.end||'19:00')}"></label><label class="form-label full">Descripción<textarea name="description" maxlength="220" placeholder="Descripción de demostración">${esc(e?.description||'')}</textarea></label></div><div class="hint-box">Se validan capacidad de recinto y horarios superpuestos. Si no existe disponibilidad, el formulario no guarda el evento.</div><div class="form-actions"><button class="btn btn-ghost" type="button" data-action="close-modal">Cancelar</button><button class="btn btn-primary" type="submit">${ico('save')} ${e?'Guardar cambios':'Crear evento demo'}</button></div></form>`);}
-function showDetails(id){const e=data.events.find(x=>x.id===id);if(!e)return;modal(`${modalHeading(e.name,'Información de la actividad ficticia')}<p class="modal-detail">${esc(e.description)}</p><div class="detail-grid"><div class="detail-cell"><small>Fecha</small><strong>${esc(fmtDate(e.date))}</strong></div><div class="detail-cell"><small>Horario</small><strong>${esc(e.start)}–${esc(e.end)}</strong></div><div class="detail-cell"><small>Recinto</small><strong>${esc(vname(e.venue))}</strong></div><div class="detail-cell"><small>Cupos disponibles</small><strong>${available(e)} de ${e.capacity}</strong></div></div>${available(e)?`<form id="regForm" data-id="${esc(e.id)}"><div class="form-grid"><label class="form-label">Alias de prueba<input name="name" maxlength="45" required placeholder="Ej.: Participante demo"></label><label class="form-label">Correo ficticio<input name="email" type="email" maxlength="90" placeholder="usuario@ejemplo.test" required></label></div><div class="hint-box">No ingreses datos personales reales. La inscripción queda almacenada solo en este navegador y no genera entradas oficiales.</div><div class="form-actions"><button class="btn btn-ghost" type="button" data-action="close-modal">Cancelar</button><button class="btn btn-primary" type="submit">${ico('ticket')} Inscribir (demo)</button></div></form>`:'<div class="hint-box">Sin cupos disponibles para este evento ficticio.</div>'}`);}
-function showVenue(id){const v=VENUES.find(v=>v.id===id);if(!v)return;const ev=sortEvents().filter(e=>e.venue===id);modal(`${modalHeading(v.name,'Disponibilidad referencial del recinto')}<p class="modal-detail">${esc(v.type)} · ${esc(v.zone)} · Capacidad de prueba: ${v.capacity} personas.</p><div class="hint-box">Eventos asignados a este recinto en la demostración:</div>${ev.length?ev.map(e=>`<div class="detail-cell" style="margin:8px 0"><strong>${esc(e.name)}</strong><small>${esc(fmtDate(e.date))} · ${esc(e.start)}–${esc(e.end)}</small></div>`).join(''):'<p class="modal-detail">No hay reservas de demostración.</p>'}<div class="form-actions"><button class="btn" type="button" data-action="close-modal">Cerrar</button></div>`);}
-function providerForm(){modal(`${modalHeading('Agregar proveedor','Solo datos ficticios de demostración')}<form id="providerForm"><div class="form-grid"><label class="form-label full">Nombre ficticio<input name="name" required maxlength="70" placeholder="Ej.: Apoyo técnico demo"></label><label class="form-label">Tipo de servicio<input name="service" required maxlength="55" placeholder="Ej.: Iluminación"></label><label class="form-label">Contacto de ejemplo<input name="contact" maxlength="70" placeholder="Por confirmar"></label></div><div class="form-actions"><button class="btn btn-ghost" type="button" data-action="close-modal">Cancelar</button><button class="btn btn-primary" type="submit">Guardar proveedor</button></div></form>`);}
-function saveEvent(form){const f=new FormData(form);const id=form.dataset.edit;const e={id:id||'e-'+Date.now(),name:String(f.get('name')||'').trim(),category:String(f.get('category')),venue:String(f.get('venue')),date:String(f.get('date')),start:String(f.get('start')),end:String(f.get('end')),capacity:Number(f.get('capacity')),status:'Programado',description:String(f.get('description')||'').trim()};const v=VENUES.find(x=>x.id===e.venue);if(!e.name||!e.date){toast('Completa el nombre y la fecha.');return;}if(e.start>=e.end){toast('El término debe ser posterior al inicio.');return;}if(!Number.isInteger(e.capacity)||e.capacity<1||!v||e.capacity>v.capacity){toast(`Los cupos deben estar entre 1 y ${v?.capacity||0}.`);return;}if(e.capacity<occupied(id)){toast('No puedes reducir cupos por debajo de las inscripciones existentes.');return;}if(data.events.some(x=>x.id!==id&&x.venue===e.venue&&x.date===e.date&&e.start<x.end&&e.end>x.start)){toast('Conflicto: ese recinto ya está reservado en ese horario.');return;}if(id){data.events=data.events.map(x=>x.id===id?e:x);}else data.events.push(e);save();byId('dialog').close();render();toast(id?'Evento de prueba actualizado.':'Evento de demostración creado.');}
-function saveRegistration(form){const f=new FormData(form);const id=form.dataset.id;const e=data.events.find(x=>x.id===id);const email=String(f.get('email')||'').trim().toLowerCase();const name=String(f.get('name')||'').trim();if(!e||!name||!email){toast('Completa los datos de prueba.');return;}if(occupied(id)>=e.capacity){toast('Evento sin cupos disponibles.');return;}if(data.regs.some(r=>r.eventId===id&&r.email===email)){toast('Ese correo ficticio ya tiene una inscripción para este evento.');return;}data.regs.push({id:'r-'+Date.now(),eventId:id,name,email});save();byId('dialog').close();render();toast('Inscripción de demostración registrada.');}
-function saveProvider(form){const f=new FormData(form);data.providers.push({id:'p-'+Date.now(),name:String(f.get('name')||'').trim(),service:String(f.get('service')||'').trim(),contact:String(f.get('contact')||'Por confirmar').trim()});save();byId('dialog').close();render();toast('Proveedor ficticio guardado.');}
-function exportCsv(){const rows=[['ID','Evento','Categoría','Fecha','Horario inicio','Horario término','Recinto','Cupos','Inscritos'],...sortEvents().map(e=>[e.id,e.name,e.category,e.date,e.start,e.end,vname(e.venue),e.capacity,occupied(e.id)])];const clean=x=>{const s=String(x??'');return `"${(/^[=+@-]/.test(s)?"'":"")+s.replaceAll('"','""')}"`;};const csv='\ufeff'+rows.map(row=>row.map(clean).join(';')).join('\r\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download='valdivia_eventos_demostracion.csv';link.click();setTimeout(()=>URL.revokeObjectURL(url),800);toast('Reporte CSV de demostración exportado.');}
-function onClick(ev){const r=ev.target.closest('[data-route]');if(r){navigate(r.dataset.route);return;}const b=ev.target.closest('[data-action]');if(!b)return;const a=b.dataset.action,id=b.dataset.id;if(a==='prev-month'||a==='next-month'){calMonth+=a==='next-month'?1:-1;if(calMonth<0){calYear--;calMonth=11;}if(calMonth>11){calYear++;calMonth=0;}if(route==='inicio')render();return;}if(a==='calendar-date'){selectedDate=b.dataset.date;calYear=+selectedDate.slice(0,4);calMonth=+selectedDate.slice(5,7)-1;const matching=data.events.filter(x=>x.date===selectedDate);if(matching.length){navigate('eventos');const q=byId('eventSearch');q.value=matching[0].name;filterEvents();toast(`Fecha ${fmtDate(selectedDate)}: ${matching.length} evento(s) de prueba.`);}else render();return;}if(a==='details'){showDetails(id);return;}if(a==='venue-details'){showVenue(id);return;}if(a==='add-provider'){providerForm();return;}if(a==='close-modal'){byId('dialog').close();return;}if(a==='edit-event'){eventForm(id);return;}if(a==='delete-event'){const e=data.events.find(x=>x.id===id);if(!e||!confirm(`¿Eliminar el evento de demostración "${e.name}"?`))return;data.events=data.events.filter(x=>x.id!==id);data.regs=data.regs.filter(r=>r.eventId!==id);save();render();toast('Evento demo eliminado.');return;}if(a==='cancel-reg'){if(!confirm('¿Cancelar esta inscripción ficticia?'))return;data.regs=data.regs.filter(x=>x.id!==id);save();render();toast('Inscripción demo cancelada.');return;}if(a==='delete-provider'){if(!confirm('¿Eliminar este proveedor ficticio?'))return;data.providers=data.providers.filter(x=>x.id!==id);save();render();toast('Proveedor demo eliminado.');return;}if(a==='csv'){exportCsv();return;}if(a==='reset'){if(!confirm('¿Restablecer todos los datos de demostración de este navegador?'))return;data=seed();save();render();toast('Datos de demostración restablecidos.');}}
-function filterEvents(){const q=byId('eventSearch');if(!q||!byId('eventsTbody'))return;const term=q.value.toLowerCase().trim(),cat=byId('eventCategory').value;const filtered=sortEvents().filter(e=>(!cat||e.category===cat)&&(!term||`${e.name} ${e.category} ${vname(e.venue)}`.toLowerCase().includes(term)));byId('eventsTbody').innerHTML=eventRows(filtered,'full');}
-function init(){byId('menuToggle').addEventListener('click',()=>{const open=byId('sidebar').classList.toggle('open');byId('mobileScrim').hidden=!open;byId('menuToggle').setAttribute('aria-expanded',String(open));});byId('mobileScrim').addEventListener('click',closeMenu);byId('newEvent').addEventListener('click',()=>eventForm());byId('notifications').addEventListener('click',()=>modal(`${modalHeading('Avisos de demostración','Este panel no está conectado con notificaciones externas.')}<div class="hint-box">Este prototipo no recibe avisos municipales reales. Comprueba los eventos, recintos y las tareas de demostración desde el panel.</div>`));document.addEventListener('click',onClick);document.addEventListener('submit',e=>{if(e.target?.id==='eventForm'){e.preventDefault();saveEvent(e.target);}if(e.target?.id==='regForm'){e.preventDefault();saveRegistration(e.target);}if(e.target?.id==='providerForm'){e.preventDefault();saveProvider(e.target);}});document.addEventListener('change',e=>{if(e.target.matches('[data-task]')){const id=e.target.dataset.task;data.tasksDone=e.target.checked?[...new Set([...data.tasksDone,id])]:data.tasksDone.filter(x=>x!==id);save();render();}});document.addEventListener('input',e=>{if(e.target.id==='eventSearch')filterEvents();});document.addEventListener('change',e=>{if(e.target.id==='eventCategory')filterEvents();});byId('dialog').addEventListener('click',e=>{if(e.target===byId('dialog'))byId('dialog').close();});window.addEventListener('hashchange',()=>{route=location.hash.replace('#/','');if(!PAGES[route])route='inicio';render();closeMenu();});route=location.hash.replace('#/','');if(!PAGES[route])route='inicio';render();}
-document.addEventListener('DOMContentLoaded',init);
+
+function fmtDate(raw) {
+  if (!raw) return '—';
+  const [y, m, d] = raw.split('-').map(Number);
+  return new Intl.DateTimeFormat('es-CL', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric'
+  }).format(new Date(y, m - 1, d));
+}
+
+function sortEvents() {
+  return [...data.events].sort((a, b) =>
+    (a.date + ' ' + a.start).localeCompare(b.date + ' ' + b.start)
+  );
+}
+
+function occupied(id) {
+  return data.regs.filter(x => x.eventId === id).length;
+}
+
+function available(e) {
+  return Math.max(0, Number(e.capacity || 0) - occupied(e.id));
+}
+
+function statCard(label, num, icon, type = '', caption = 'Datos simulados') {
+  return `<article class="card stat-card">
+    <div class="stat-icon ${type}">${ico(icon)}</div>
+    <div>
+      <div class="stat-label">${esc(label)}</div>
+      <div class="stat-value">${esc(num)}</div>
+      <div class="stat-note">${esc(caption)}</div>
+    </div>
+  </article>`;
+}
+
+function statusPill(s) {
+  return `<span class="pill ${s === 'Programado' ? 'green' : 'slate'}">${esc(s || 'Programado')}</span>`;
+}
+
+function eventArt(cat) {
+  const color = {
+    Teatro: '#7758b7',
+    Feria: '#c38d4c',
+    Música: '#365dac',
+    Taller: '#288e87',
+    Comunidad: '#5b84a2'
+  }[cat] || '#426bab';
+
+  return `<span class="tiny-category-icon" style="background:${color}">
+    ${ico(cat === 'Música' ? 'spark' : cat === 'Feria' ? 'box' : 'calendar')}
+  </span>`;
+}
+
+function buttonsCard(e) {
+  return `<button type="button" class="table-action" data-action="details" data-id="${esc(e.id)}">Ver detalles</button>`;
+}
+
+function eventRows(list, mode = 'simple') {
+  if (!list.length) {
+    return '<tr><td colspan="6" class="empty-state">No hay eventos de demostración para estos filtros.</td></tr>';
+  }
+
+  return list.map(e => `<tr>
+    <td class="title-cell">
+      ${eventArt(e.category)}
+      <span class="event-title">
+        ${esc(e.name)}
+        <span class="tiny-muted">${esc(e.category)}</span>
+      </span>
+    </td>
+    <td>${esc(fmtDate(e.date))}</td>
+    <td>${esc(vname(e.venue))}</td>
+    <td>${occupied(e.id)}/${esc(e.capacity)}</td>
+    <td>${statusPill(e.status)}</td>
+    <td>${buttonsCard(e)}
+      ${mode === 'full' ? `<button type="button" class="table-action danger" data-action="delete-event" data-id="${esc(e.id)}">Eliminar</button>` : ''}
+    </td>
+  </tr>`).join('');
+}
+
+function eventTable(items, mode = 'simple') {
+  return `<div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Evento</th>
+          <th>Fecha</th>
+          <th>Recinto</th>
+          <th>Inscritos / cupos</th>
+          <th>Estado</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody id="eventsTbody">${eventRows(items, mode)}</tbody>
+    </table>
+  </div>`;
+}
+
+function homeEventTable(items) {
+  return `<div class="table-wrap">
+    <table class="data-table home-table">
+      <thead>
+        <tr><th>Evento</th><th>Fecha y recinto</th><th>Cupos</th></tr>
+      </thead>
+      <tbody>
+        ${items.map(e => `<tr>
+          <td class="title-cell">
+            ${eventArt(e.category)}
+            <span class="event-title">
+              <button class="home-event-link" type="button" data-action="details" data-id="${esc(e.id)}">${esc(e.name)}</button>
+              <span class="tiny-muted">${esc(e.category)} · Programado</span>
+            </span>
+          </td>
+          <td class="place-cell">
+            <strong>${esc(fmtDate(e.date))}</strong>
+            <span class="tiny-muted">${esc(vname(e.venue))}</span>
+          </td>
+          <td>${occupied(e.id)} / ${esc(e.capacity)}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>`;
+}
+
+function headPanel(title, icon, linkText = '', r = '') {
+  return `<div class="panel-heading">
+    <h2>${ico(icon)} ${esc(title)}</h2>
+    ${linkText ? `<button class="text-button" type="button" data-route="${esc(r)}">${esc(linkText)} →</button>` : ''}
+  </div>`;
+}
+
+function monthKey(date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+}
+
+function calendarHTML() {
+  const monthStart = new Date(calYear, calMonth, 1);
+  const monName = new Intl.DateTimeFormat('es-CL', {
+    month: 'long',
+    year: 'numeric'
+  }).format(monthStart);
+
+  const offset = (monthStart.getDay() + 6) % 7;
+  const cells = [];
+
+  for (let i = 0; i < 42; i++) {
+    const d = new Date(calYear, calMonth, 1 - offset + i);
+    const key = monthKey(d);
+    const has = data.events.some(e => e.date === key);
+    const active = selectedDate === key;
+
+    cells.push(`<button class="day-cell ${d.getMonth() !== calMonth ? 'outside' : ''} ${has ? 'has-event' : ''} ${active ? 'selected' : ''}"
+      data-action="calendar-date"
+      data-date="${key}"
+      title="${esc(fmtDate(key))}${has ? ' · evento(s) demo' : ''}"
+      type="button">
+      ${d.getDate()}${has ? '<span class="day-dot"></span>' : ''}
+    </button>`);
+  }
+
+  const selection = selectedDate
+    ? `Fecha seleccionada: ${fmtDate(selectedDate)} · ${data.events.filter(e => e.date === selectedDate).length} evento(s) demo`
+    : 'Selecciona un día para consultar la agenda';
+
+  return `${headPanel('Agenda cultural', 'calendar')}
+    <div class="month-control">
+      <button class="small-icon-btn" aria-label="Mes anterior" data-action="prev-month" type="button">${ico('chevronLeft')}</button>
+      <strong>${esc(monName)}</strong>
+      <button class="small-icon-btn" aria-label="Mes siguiente" data-action="next-month" type="button">${ico('chevronRight')}</button>
+    </div>
+    <div class="calendar-weekdays">
+      ${['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'].map(x => `<span>${x}</span>`).join('')}
+    </div>
+    <div class="calendar-days">${cells.join('')}</div>
+    <div class="calendar-legend">
+      <span><b class="legend-swatch"></b> Eventos demo</span>
+      <span><b class="legend-swatch dark"></b> Selección</span>
+    </div>
+    <div class="calendar-caption">${esc(selection)}</div>`;
+}
+
+function taskList() {
+  return TASKS.map(t => `<label class="task-row ${data.tasksDone.includes(t.id) ? 'is-done' : ''}">
+    <input type="checkbox" data-task="${t.id}" ${data.tasksDone.includes(t.id) ? 'checked' : ''}>
+    <span>${esc(t.title)}<small>${esc(t.due)}</small></span>
+  </label>`).join('');
+}
+
+function culturalOperationsStatus() {
+  const pending = TASKS.filter(t => !data.tasksDone.includes(t.id)).length;
+  const noRegistrations = data.events.filter(e => occupied(e.id) === 0).length;
+  const fullEvents = data.events.filter(e => available(e) === 0).length;
+
+  return `<article class="card progress-panel">
+    <h2>${ico('layers')} Seguimiento de la gestión cultural</h2>
+    <div class="status-callout">
+      <strong>Resumen operativo de demostración</strong>
+      <p>Tareas y eventos de ejemplo guardados en este navegador. No son datos ni gestiones oficiales de la municipalidad.</p>
+    </div>
+    <div class="progress-steps">
+      <div class="progress-step ${pending ? 'pending' : ''}">
+        ${ico(pending ? 'circle' : 'check')}
+        <span>Coordinaciones pendientes: <strong>${pending}</strong> de ${TASKS.length}</span>
+      </div>
+      <div class="progress-step ${noRegistrations ? 'pending' : ''}">
+        ${ico(noRegistrations ? 'circle' : 'check')}
+        <span>Eventos sin inscripciones: <strong>${noRegistrations}</strong></span>
+      </div>
+      <div class="progress-step ${fullEvents ? 'pending' : ''}">
+        ${ico(fullEvents ? 'circle' : 'check')}
+        <span>Eventos sin cupos disponibles: <strong>${fullEvents}</strong></span>
+      </div>
+      <div class="progress-step">
+        ${ico('info')}
+        <span>Revisar los módulos de Eventos, Recintos y Reportes para obtener más detalle.</span>
+      </div>
+    </div>
+  </article>`;
+}
+
+const MODULES = [
+  { name: 'Gestión de eventos', desc: 'Planificación y programación cultural', icon: 'calendar', route: 'eventos', c: '' },
+  { name: 'Recintos', desc: 'Capacidad y disponibilidad de espacios', icon: 'building', route: 'recintos', c: 'm1' },
+  { name: 'Inscripciones', desc: 'Registro y control de cupos', icon: 'users', route: 'inscripciones', c: 'm2' },
+  { name: 'Proveedores', desc: 'Servicios y coordinación', icon: 'box', route: 'proveedores', c: 'm3' },
+  { name: 'Reportes', desc: 'Consultas e indicadores del sistema', icon: 'chart', route: 'reportes', c: 'm4' }
+];
+
+function homeHTML() {
+  const items = sortEvents().slice(0, 5);
+
+  return `<section class="stats-grid">
+    ${statCard('Eventos registrados', data.events.length, 'calendar', '', 'Actividades de demostración')}
+    ${statCard('Recintos', VENUES.length, 'building', 'purple', 'Alcance inicial: 5 recintos')}
+    ${statCard('Inscripciones', data.regs.length, 'users', 'mint', 'Registros locales de prueba')}
+    ${statCard('Tipos de reportes', 3, 'chart', 'gold', 'Consultas de demostración')}
+  </section>
+  <section class="dashboard-grid">
+    <article class="card section-panel">
+      ${headPanel('Próximos eventos culturales', 'calendar', 'Ver todos los eventos', 'eventos')}
+      ${homeEventTable(items)}
+    </article>
+    <article class="card calendar-panel" id="calendarPanel">
+      ${calendarHTML()}
+    </article>
+    <div class="right-stack">
+      <article class="card">
+        ${headPanel('Tareas del Área de Cultura', 'file', 'Ver reportes', 'reportes')}
+        <p class="task-context">Actividades ilustrativas de coordinación municipal, no compromisos oficiales.</p>
+        <div class="task-list" id="taskList">${taskList()}</div>
+      </article>
+      ${culturalOperationsStatus()}
+    </div>
+  </section>
+  <section class="card modules-panel">
+    <h2>${ico('grid')} Módulos del sistema</h2>
+    <div class="modules-grid">
+      ${MODULES.map(m => `<button class="module-tile ${m.c}" data-route="${m.route}" type="button">
+        <span class="module-icon">${ico(m.icon)}</span>
+        <span><strong>${m.name}</strong>${m.desc}</span>
+      </button>`).join('')}
+    </div>
+  </section>`;
+}
+
+function eventsHTML() {
+  return `<div class="page-row">
+    <div>
+      <h2>Eventos culturales de demostración</h2>
+      <p>Consulta, crea o elimina eventos de prueba. Se validan capacidad y horarios.</p>
+    </div>
+    <div class="search-controls">
+      <input id="eventSearch" class="field search-input" placeholder="Buscar evento o recinto" aria-label="Buscar eventos">
+      <select id="eventCategory" class="field" aria-label="Filtrar categoría">
+        <option value="">Todas las categorías</option>
+        ${['Teatro', 'Música', 'Feria', 'Taller', 'Comunidad', 'Exposición'].map(c => `<option>${c}</option>`).join('')}
+      </select>
+    </div>
+  </div>
+  <article class="card data-card">${eventTable(sortEvents(), 'full')}</article>
+  <div class="hint-box">
+    ${ico('info')}
+    Los eventos aquí mostrados son completamente ficticios. Al crear uno, el sistema comprueba que el recinto no esté ocupado en ese mismo horario y que los cupos no superen su capacidad.
+  </div>`;
+}
+
+function venueHTML() {
+  return `<div class="page-row">
+    <div>
+      <h2>Recintos culturales</h2>
+      <p>Cinco recintos referenciales, correspondientes al alcance inicial del caso.</p>
+    </div>
+  </div>
+  <div class="page-grid">
+    ${VENUES.map(v => {
+      const ev = data.events.filter(e => e.venue === v.id);
+
+      return `<article class="card venue-card">
+        <div class="room-icon">${ico('building')}</div>
+        <h3>${esc(v.name)}</h3>
+        <p>${esc(v.type)} · Zona de ejemplo: ${esc(v.zone)}. Capacidad y reservas ficticias para probar restricciones.</p>
+        <div class="venue-info">
+          <span>Capacidad de prueba</span>
+          <strong>${v.capacity} personas</strong>
+        </div>
+        <div class="venue-info">
+          <span>Eventos asignados</span>
+          <strong>${ev.length}</strong>
+        </div>
+        <button class="btn btn-ghost" style="margin-top:15px" type="button" data-action="venue-details" data-id="${v.id}">
+          Consultar disponibilidad ${ico('arrow')}
+        </button>
+      </article>`;
+    }).join('')}
+  </div>`;
+}
+
+function registrationsHTML() {
+  const rs = [...data.regs].reverse();
+
+  return `<div class="page-row">
+    <div>
+      <h2>Inscripciones de prueba</h2>
+      <p>El registro se guarda únicamente en el navegador y nunca llega a la municipalidad.</p>
+    </div>
+    <button class="btn btn-ghost" data-route="publico" type="button">
+      ${ico('ticket')} Inscribir asistente
+    </button>
+  </div>
+  <article class="card data-card">
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Participante</th>
+            <th>Evento</th>
+            <th>Fecha</th>
+            <th>Correo de prueba</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rs.length
+            ? rs.map(r => {
+                const e = data.events.find(e => e.id === r.eventId);
+                return `<tr>
+                  <td>${esc(r.name)}</td>
+                  <td>${esc(e?.name || 'Evento eliminado')}</td>
+                  <td>${esc(e ? fmtDate(e.date) : '—')}</td>
+                  <td>${esc(r.email)}</td>
+                  <td>
+                    <button class="table-action danger" type="button" data-action="cancel-reg" data-id="${esc(r.id)}">Cancelar</button>
+                  </td>
+                </tr>`;
+              }).join('')
+            : '<tr><td colspan="5" class="empty-state"><strong>Sin inscripciones de prueba todavía</strong>Abre Cartelera ciudadana, elige un evento y registra un alias ficticio.</td></tr>'}
+        </tbody>
+      </table>
+    </div>
+  </article>`;
+}
+
+function providersHTML() {
+  return `<div class="page-row">
+    <div>
+      <h2>Proveedores y servicios</h2>
+      <p>Listado ilustrativo: todavía no hay contratos ni datos municipales reales.</p>
+    </div>
+    <button class="btn btn-primary" type="button" data-action="add-provider">
+      ${ico('plus')} Añadir proveedor demo
+    </button>
+  </div>
+  <div class="page-grid">
+    ${data.providers.map(p => `<article class="card mini-card">
+      <div class="room-icon" style="background:#fff2e2;color:#af7b23">
+        ${ico('box')}
+      </div>
+      <h3>${esc(p.name)}</h3>
+      <p><strong>Servicio:</strong> ${esc(p.service)}<br>
+      <strong>Contacto:</strong> ${esc(p.contact)}</p>
+      <button class="btn btn-danger" data-action="delete-provider" data-id="${esc(p.id)}" type="button">
+        ${ico('trash')} Eliminar de prueba
+      </button>
+    </article>`).join('')}
+  </div>
+  ${data.providers.length ? '' : '<div class="empty-state">No hay proveedores de demostración.</div>'}`;
+}
+
+function reportsHTML() {
+  const byCat = {};
+
+  for (const e of data.events) {
+    byCat[e.category] = (byCat[e.category] || 0) + 1;
+  }
+
+  const max = Math.max(1, ...Object.values(byCat));
+  const totalSeats = data.events.reduce((s, e) => s + Number(e.capacity || 0), 0);
+
+  return `<div class="page-row">
+    <div>
+      <h2>Reportes del prototipo</h2>
+      <p>Indicadores calculados sobre los eventos e inscripciones locales de ejemplo.</p>
+    </div>
+    <button class="btn btn-primary" type="button" data-action="csv">
+      ${ico('download')} Exportar Excel
+    </button>
+  </div>
+  <section class="stats-grid">
+    ${statCard('Eventos demo', data.events.length, 'calendar')}
+    ${statCard('Recintos', VENUES.length, 'building', 'purple')}
+    ${statCard('Inscripciones demo', data.regs.length, 'users', 'mint')}
+    ${statCard('Cupos definidos', totalSeats, 'ticket', 'gold')}
+  </section>
+  <section class="report-grid">
+    <article class="card chart-box">
+      <h3>Eventos por categoría</h3>
+      ${Object.entries(byCat).length
+        ? Object.entries(byCat).map(([cat, n]) => `<div class="bar-line">
+            <div class="bar-title">
+              <span>${esc(cat)}</span><strong>${n}</strong>
+            </div>
+            <div class="bar-rail">
+              <div class="bar-fill" style="width:${n / max * 100}%"></div>
+            </div>
+          </div>`).join('')
+        : '<p class="empty-state">Sin eventos.</p>'}
+    </article>
+    <article class="card chart-box">
+      <h3>Inscripciones por evento</h3>
+      ${sortEvents().map(e => `<div class="bar-line">
+        <div class="bar-title">
+          <span>${esc(e.name)}</span>
+          <strong>${occupied(e.id)}/${e.capacity}</strong>
+        </div>
+        <div class="bar-rail">
+          <div class="bar-fill" style="width:${Math.max(occupied(e.id) / e.capacity * 100, 0)}%"></div>
+        </div>
+      </div>`).join('')}
+    </article>
+  </section>
+  <div class="hint-box">
+    Los indicadores se calculan sobre datos ficticios creados para probar la interfaz; no representan actividad municipal real.
+    <button class="text-button" data-action="reset" type="button">Restablecer datos de demostración</button>
+  </div>`;
+}
+
+function usersHTML() {
+  const cols = ['Ciudadanía', 'Cultura', 'TI municipal'];
+  const rows = [
+    ['Consultar eventos', [1, 1, 1]],
+    ['Inscribirse en eventos', [1, 1, 0]],
+    ['Crear y editar eventos', [0, 1, 0]],
+    ['Asignar recintos', [0, 1, 0]],
+    ['Consultar reportes internos', [0, 1, 1]],
+    ['Administrar cuentas', [0, 0, 1]]
+  ];
+
+  return `<div class="page-row">
+    <div>
+      <h2>Roles y permisos propuestos</h2>
+      <p>Matriz de diseño para validar con el Área de Cultura y TI; no hay autenticación implementada.</p>
+    </div>
+  </div>
+  <article class="card data-card">
+    <div class="table-wrap">
+      <table class="data-table permission-table">
+        <thead>
+          <tr><th>Permiso</th>${cols.map(c => `<th>${c}</th>`).join('')}</tr>
+        </thead>
+        <tbody>
+          ${rows.map(([title, flags]) => `<tr>
+            <td>${title}</td>
+            ${flags.map(flag => `<td class="${flag ? 'ok' : 'no'}">${flag ? '✓' : '—'}</td>`).join('')}
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+  </article>
+  <div class="hint-box">
+    ${ico('shield')}
+    Los roles son una propuesta técnica. Este prototipo no incluye inicio de sesión, permisos verdaderos, protección de datos ni acceso a infraestructura municipal.
+  </div>`;
+}
+
+function publicHTML() {
+  const backgrounds = [
+    'linear-gradient(135deg,#4c5da3,#b593d8)',
+    'linear-gradient(135deg,#99703e,#e6c98d)',
+    'linear-gradient(135deg,#14578d,#6badd6)',
+    'linear-gradient(135deg,#257f75,#9dd3cb)',
+    'linear-gradient(135deg,#976c69,#dba29c)'
+  ];
+
+  return `<div class="page-row">
+    <div>
+      <h2>Cartelera cultural ciudadana</h2>
+      <p>Experiencia pública de demostración para explorar eventos e inscribirse con un alias ficticio.</p>
+    </div>
+  </div>
+  <div class="public-list">
+    ${sortEvents().map((e, i) => `<article class="card public-card">
+      <div class="public-visual" style="background:${backgrounds[i % 5]}">
+        <strong>${esc(e.category)}</strong>
+      </div>
+      <div class="public-body">
+        <span class="pill">${esc(fmtDate(e.date))}</span>
+        <h3 style="margin-top:12px">${esc(e.name)}</h3>
+        <p>
+          ${ico('location', 14)} ${esc(vname(e.venue))}<br>
+          ${ico('clock', 14)} ${esc(e.start)}–${esc(e.end)} · ${available(e)} cupos demo
+        </p>
+        <button type="button" class="btn btn-primary" data-action="details" data-id="${esc(e.id)}">
+          Detalles e inscripción ${ico('arrow')}
+        </button>
+      </div>
+    </article>`).join('')}
+  </div>`;
+}
+
+const PAGES = {
+  inicio: {
+    name: 'Sistema de Gestión de Eventos Culturales',
+    sub: 'Plataforma para planificar, administrar y consultar actividades culturales.',
+    eyebrow: 'GESTIÓN CULTURAL / PANEL GENERAL',
+    icon: 'calendar'
+  },
+  eventos: {
+    name: 'Gestión de eventos',
+    sub: 'Administración de actividades y programación cultural.',
+    eyebrow: 'OPERACIÓN / EVENTOS',
+    icon: 'calendar'
+  },
+  recintos: {
+    name: 'Gestión de recintos',
+    sub: 'Espacios, capacidades y horarios disponibles.',
+    eyebrow: 'OPERACIÓN / RECINTOS',
+    icon: 'building'
+  },
+  inscripciones: {
+    name: 'Inscripciones y cupos',
+    sub: 'Participantes de demostración y control de reservas.',
+    eyebrow: 'OPERACIÓN / INSCRIPCIONES',
+    icon: 'users'
+  },
+  proveedores: {
+    name: 'Proveedores',
+    sub: 'Organización de servicios necesarios para cada evento.',
+    eyebrow: 'COORDINACIÓN / PROVEEDORES',
+    icon: 'box'
+  },
+  reportes: {
+    name: 'Reportes e indicadores',
+    sub: 'Consultas basadas en datos ficticios de la aplicación.',
+    eyebrow: 'ANÁLISIS / REPORTES',
+    icon: 'chart'
+  },
+  usuarios: {
+    name: 'Roles y permisos',
+    sub: 'Diseño preliminar de los perfiles del sistema.',
+    eyebrow: 'ADMINISTRACIÓN / SEGURIDAD',
+    icon: 'shield'
+  },
+  publico: {
+    name: 'Cartelera ciudadana',
+    sub: 'Exploración e inscripción cultural de demostración.',
+    eyebrow: 'VISTA PÚBLICA / CIUDADANÍA',
+    icon: 'globe'
+  }
+};
+
+function closeMenu() {
+  byId('sidebar').classList.remove('open');
+  byId('mobileScrim').hidden = true;
+  byId('menuToggle').setAttribute('aria-expanded', 'false');
+}
+
+function navigate(r) {
+  route = PAGES[r] ? r : 'inicio';
+  location.hash = `/${route}`;
+  render();
+  closeMenu();
+  window.scrollTo({ top: 0, behavior: 'auto' });
+}
+
+function render() {
+  const meta = PAGES[route] || PAGES.inicio;
+
+  byId('sectionTitle').textContent = meta.name;
+  byId('sectionSubtitle').textContent = meta.sub;
+  byId('sectionEyebrow').textContent = meta.eyebrow;
+
+  byId('view').innerHTML = ({
+    inicio: homeHTML,
+    eventos: eventsHTML,
+    recintos: venueHTML,
+    inscripciones: registrationsHTML,
+    proveedores: providersHTML,
+    reportes: reportsHTML,
+    usuarios: usersHTML,
+    publico: publicHTML
+  }[route] || homeHTML)();
+
+  document.querySelectorAll('[data-icon]').forEach(e => {
+    const n = e.dataset.icon;
+    e.innerHTML = ico(n);
+  });
+
+  document.querySelectorAll('[data-route]').forEach(el => {
+    el.classList.toggle('is-active', el.dataset.route === route);
+  });
+}
+
+function toast(text) {
+  const el = byId('toast');
+  el.textContent = text;
+  el.classList.add('visible');
+  clearTimeout(toast.timer);
+  toast.timer = setTimeout(() => el.classList.remove('visible'), 3600);
+}
+
+function modal(html) {
+  byId('dialogContent').innerHTML = html;
+  byId('dialog').showModal();
+}
+
+function modalHeading(title, desc) {
+  return `<div class="dialog-top">
+    <div>
+      <h2 id="dialogTitle">${esc(title)}</h2>
+      <p>${esc(desc)}</p>
+    </div>
+    <button type="button" class="dialog-close" data-action="close-modal" aria-label="Cerrar">${ico('x')}</button>
+  </div>`;
+}
+
+function eventForm(id) {
+  const e = id ? data.events.find(x => x.id === id) : null;
+
+  modal(`${modalHeading(
+    e ? 'Editar evento' : 'Nuevo evento cultural',
+    'Solo demostración; no se conecta con un servidor.'
+  )}
+  <form id="eventForm" data-edit="${esc(id || '')}">
+    <div class="form-grid">
+      <label class="form-label full">
+        Nombre del evento
+        <input name="name" required maxlength="90" value="${esc(e?.name || '')}" placeholder="Ej.: Festival de artes comunitarias">
+      </label>
+      <label class="form-label">
+        Categoría
+        <select name="category">
+          ${['Teatro', 'Música', 'Feria', 'Taller', 'Comunidad', 'Exposición'].map(c =>
+            `<option ${e?.category === c ? 'selected' : ''}>${c}</option>`
+          ).join('')}
+        </select>
+      </label>
+      <label class="form-label">
+        Recinto
+        <select name="venue">
+          ${VENUES.map(v => `<option value="${v.id}" ${e?.venue === v.id ? 'selected' : ''}>${esc(v.name)} · ${v.capacity} máx.</option>`).join('')}
+        </select>
+      </label>
+      <label class="form-label">
+        Fecha
+        <input type="date" name="date" required value="${esc(e?.date || '2026-11-25')}">
+      </label>
+      <label class="form-label">
+        Cupos
+        <input type="number" min="1" name="capacity" required value="${esc(e?.capacity || '60')}">
+      </label>
+      <label class="form-label">
+        Inicio
+        <input type="time" name="start" required value="${esc(e?.start || '17:00')}">
+      </label>
+      <label class="form-label">
+        Término
+        <input type="time" name="end" required value="${esc(e?.end || '19:00')}">
+      </label>
+      <label class="form-label full">
+        Descripción
+        <textarea name="description" maxlength="220" placeholder="Descripción de demostración">${esc(e?.description || '')}</textarea>
+      </label>
+    </div>
+    <div class="hint-box">
+      Se validan capacidad de recinto y horarios superpuestos. Si no existe disponibilidad, el formulario no guarda el evento.
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-ghost" type="button" data-action="close-modal">Cancelar</button>
+      <button class="btn btn-primary" type="submit">
+        ${ico('save')} ${e ? 'Guardar cambios' : 'Crear evento demo'}
+      </button>
+    </div>
+  </form>`);
+}
+
+function showDetails(id) {
+  const e = data.events.find(x => x.id === id);
+  if (!e) return;
+
+  modal(`${modalHeading(e.name, 'Información de la actividad ficticia')}
+    <p class="modal-detail">${esc(e.description)}</p>
+    <div class="detail-grid">
+      <div class="detail-cell">
+        <small>Fecha</small>
+        <strong>${esc(fmtDate(e.date))}</strong>
+      </div>
+      <div class="detail-cell">
+        <small>Horario</small>
+        <strong>${esc(e.start)}–${esc(e.end)}</strong>
+      </div>
+      <div class="detail-cell">
+        <small>Recinto</small>
+        <strong>${esc(vname(e.venue))}</strong>
+      </div>
+      <div class="detail-cell">
+        <small>Cupos disponibles</small>
+        <strong>${available(e)} de ${e.capacity}</strong>
+      </div>
+    </div>
+    ${available(e)
+      ? `<form id="regForm" data-id="${esc(e.id)}">
+          <div class="form-grid">
+            <label class="form-label">
+              Alias de prueba
+              <input name="name" maxlength="45" required placeholder="Ej.: Participante demo">
+            </label>
+            <label class="form-label">
+              Correo ficticio
+              <input name="email" type="email" maxlength="90" placeholder="usuario@ejemplo.test" required>
+            </label>
+          </div>
+          <div class="hint-box">
+            No ingreses datos personales reales. La inscripción queda almacenada solo en este navegador y no genera entradas oficiales.
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-ghost" type="button" data-action="close-modal">Cancelar</button>
+            <button class="btn btn-primary" type="submit">
+              ${ico('ticket')} Inscribir (demo)
+            </button>
+          </div>
+        </form>`
+      : '<div class="hint-box">Sin cupos disponibles para este evento ficticio.</div>'}`);
+}
+
+function showVenue(id) {
+  const v = VENUES.find(v => v.id === id);
+  if (!v) return;
+
+  const ev = sortEvents().filter(e => e.venue === id);
+
+  modal(`${modalHeading(v.name, 'Disponibilidad referencial del recinto')}
+    <p class="modal-detail">
+      ${esc(v.type)} · ${esc(v.zone)} · Capacidad de prueba: ${v.capacity} personas.
+    </p>
+    <div class="hint-box">Eventos asignados a este recinto en la demostración:</div>
+    ${ev.length
+      ? ev.map(e => `<div class="detail-cell" style="margin:8px 0">
+          <strong>${esc(e.name)}</strong>
+          <small>${esc(fmtDate(e.date))} · ${esc(e.start)}–${esc(e.end)}</small>
+        </div>`).join('')
+      : '<p class="modal-detail">No hay reservas de demostración.</p>'}
+    <div class="form-actions">
+      <button class="btn" type="button" data-action="close-modal">Cerrar</button>
+    </div>`);
+}
+
+function providerForm() {
+  modal(`${modalHeading('Agregar proveedor', 'Solo datos ficticios de demostración')}
+    <form id="providerForm">
+      <div class="form-grid">
+        <label class="form-label full">
+          Nombre ficticio
+          <input name="name" required maxlength="70" placeholder="Ej.: Apoyo técnico demo">
+        </label>
+        <label class="form-label">
+          Tipo de servicio
+          <input name="service" required maxlength="55" placeholder="Ej.: Iluminación">
+        </label>
+        <label class="form-label">
+          Contacto de ejemplo
+          <input name="contact" maxlength="70" placeholder="Por confirmar">
+        </label>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-ghost" type="button" data-action="close-modal">Cancelar</button>
+        <button class="btn btn-primary" type="submit">Guardar proveedor</button>
+      </div>
+    </form>`);
+}
+
+function saveEvent(form) {
+  const f = new FormData(form);
+  const id = form.dataset.edit;
+
+  const e = {
+    id: id || 'e-' + Date.now(),
+    name: String(f.get('name') || '').trim(),
+    category: String(f.get('category')),
+    venue: String(f.get('venue')),
+    date: String(f.get('date')),
+    start: String(f.get('start')),
+    end: String(f.get('end')),
+    capacity: Number(f.get('capacity')),
+    status: 'Programado',
+    description: String(f.get('description') || '').trim()
+  };
+
+  const v = VENUES.find(x => x.id === e.venue);
+
+  if (!e.name || !e.date) {
+    toast('Completa el nombre y la fecha.');
+    return;
+  }
+
+  if (e.start >= e.end) {
+    toast('El término debe ser posterior al inicio.');
+    return;
+  }
+
+  if (!Number.isInteger(e.capacity) || e.capacity < 1 || !v || e.capacity > v.capacity) {
+    toast(`Los cupos deben estar entre 1 y ${v?.capacity || 0}.`);
+    return;
+  }
+
+  if (e.capacity < occupied(id)) {
+    toast('No puedes reducir cupos por debajo de las inscripciones existentes.');
+    return;
+  }
+
+  if (data.events.some(x =>
+    x.id !== id &&
+    x.venue === e.venue &&
+    x.date === e.date &&
+    e.start < x.end &&
+    e.end > x.start
+  )) {
+    toast('Conflicto: ese recinto ya está reservado en ese horario.');
+    return;
+  }
+
+  if (id) {
+    data.events = data.events.map(x => x.id === id ? e : x);
+  } else {
+    data.events.push(e);
+  }
+
+  save();
+  byId('dialog').close();
+  render();
+  toast(id ? 'Evento de prueba actualizado.' : 'Evento de demostración creado.');
+}
+
+function saveRegistration(form) {
+  const f = new FormData(form);
+  const id = form.dataset.id;
+  const e = data.events.find(x => x.id === id);
+  const email = String(f.get('email') || '').trim().toLowerCase();
+  const name = String(f.get('name') || '').trim();
+
+  if (!e || !name || !email) {
+    toast('Completa los datos de prueba.');
+    return;
+  }
+
+  if (occupied(id) >= e.capacity) {
+    toast('Evento sin cupos disponibles.');
+    return;
+  }
+
+  if (data.regs.some(r => r.eventId === id && r.email === email)) {
+    toast('Ese correo ficticio ya tiene una inscripción para este evento.');
+    return;
+  }
+
+  data.regs.push({
+    id: 'r-' + Date.now(),
+    eventId: id,
+    name,
+    email
+  });
+
+  save();
+  byId('dialog').close();
+  render();
+  toast('Inscripción de demostración registrada.');
+}
+
+function saveProvider(form) {
+  const f = new FormData(form);
+
+  data.providers.push({
+    id: 'p-' + Date.now(),
+    name: String(f.get('name') || '').trim(),
+    service: String(f.get('service') || '').trim(),
+    contact: String(f.get('contact') || 'Por confirmar').trim()
+  });
+
+  save();
+  byId('dialog').close();
+  render();
+  toast('Proveedor ficticio guardado.');
+}
+
+// EXPORTACIÓN A EXCEL CORREGIDA
+function exportCsv() {
+  if (typeof XLSX === 'undefined') {
+    toast('No se pudo cargar el generador de Excel. Revisa tu conexión.');
+    return;
+  }
+
+  const encabezados = [
+    'ID',
+    'Evento',
+    'Categoría',
+    'Fecha',
+    'Horario inicio',
+    'Horario término',
+    'Recinto',
+    'Cupos',
+    'Inscritos'
+  ];
+
+  const filas = sortEvents().map((evento, indice) => [
+    indice + 1,
+    evento.name,
+    evento.category,
+    evento.date,
+    evento.start,
+    evento.end,
+    vname(evento.venue),
+    Number(evento.capacity),
+    occupied(evento.id)
+  ]);
+
+  const hoja = XLSX.utils.aoa_to_sheet([
+    encabezados,
+    ...filas
+  ]);
+
+  hoja['!cols'] = [
+    { wch: 7 },
+    { wch: 38 },
+    { wch: 19 },
+    { wch: 16 },
+    { wch: 18 },
+    { wch: 18 },
+    { wch: 34 },
+    { wch: 12 },
+    { wch: 12 }
+  ];
+
+  hoja['!autofilter'] = {
+    ref: `A1:I${filas.length + 1}`
+  };
+
+  const libro = XLSX.utils.book_new();
+
+  XLSX.utils.book_append_sheet(
+    libro,
+    hoja,
+    'Eventos Culturales'
+  );
+
+  try {
+    XLSX.writeFile(
+      libro,
+      'valdivia_eventos_demostracion.xlsx'
+    );
+
+    toast('Reporte Excel descargado correctamente.');
+  } catch (error) {
+    console.error('Error al exportar el Excel:', error);
+    toast('No se pudo descargar el Excel. Inténtalo nuevamente.');
+  }
+}
+
+function onClick(ev) {
+  const r = ev.target.closest('[data-route]');
+
+  if (r) {
+    navigate(r.dataset.route);
+    return;
+  }
+
+  const b = ev.target.closest('[data-action]');
+  if (!b) return;
+
+  const a = b.dataset.action;
+  const id = b.dataset.id;
+
+  if (a === 'prev-month' || a === 'next-month') {
+    calMonth += a === 'next-month' ? 1 : -1;
+
+    if (calMonth < 0) {
+      calYear--;
+      calMonth = 11;
+    }
+
+    if (calMonth > 11) {
+      calYear++;
+      calMonth = 0;
+    }
+
+    if (route === 'inicio') render();
+    return;
+  }
+
+  if (a === 'calendar-date') {
+    selectedDate = b.dataset.date;
+    calYear = +selectedDate.slice(0, 4);
+    calMonth = +selectedDate.slice(5, 7) - 1;
+
+    const matching = data.events.filter(x => x.date === selectedDate);
+
+    if (matching.length) {
+      navigate('eventos');
+      const q = byId('eventSearch');
+      q.value = matching[0].name;
+      filterEvents();
+      toast(`Fecha ${fmtDate(selectedDate)}: ${matching.length} evento(s) de prueba.`);
+    } else {
+      render();
+    }
+    return;
+  }
+
+  if (a === 'details') {
+    showDetails(id);
+    return;
+  }
+
+  if (a === 'venue-details') {
+    showVenue(id);
+    return;
+  }
+
+  if (a === 'add-provider') {
+    providerForm();
+    return;
+  }
+
+  if (a === 'close-modal') {
+    byId('dialog').close();
+    return;
+  }
+
+  if (a === 'edit-event') {
+    eventForm(id);
+    return;
+  }
+
+  if (a === 'delete-event') {
+    const e = data.events.find(x => x.id === id);
+
+    if (!e || !confirm(`¿Eliminar el evento de demostración "${e.name}"?`)) return;
+
+    data.events = data.events.filter(x => x.id !== id);
+    data.regs = data.regs.filter(r => r.eventId !== id);
+
+    save();
+    render();
+    toast('Evento demo eliminado.');
+    return;
+  }
+
+  if (a === 'cancel-reg') {
+    if (!confirm('¿Cancelar esta inscripción ficticia?')) return;
+
+    data.regs = data.regs.filter(x => x.id !== id);
+
+    save();
+    render();
+    toast('Inscripción demo cancelada.');
+    return;
+  }
+
+  if (a === 'delete-provider') {
+    if (!confirm('¿Eliminar este proveedor ficticio?')) return;
+
+    data.providers = data.providers.filter(x => x.id !== id);
+
+    save();
+    render();
+    toast('Proveedor demo eliminado.');
+    return;
+  }
+
+  if (a === 'csv') {
+    exportCsv();
+    return;
+  }
+
+  if (a === 'reset') {
+    if (!confirm('¿Restablecer todos los datos de demostración de este navegador?')) return;
+
+    data = seed();
+    save();
+    render();
+    toast('Datos de demostración restablecidos.');
+  }
+}
+
+function filterEvents() {
+  const q = byId('eventSearch');
+
+  if (!q || !byId('eventsTbody')) return;
+
+  const term = q.value.toLowerCase().trim();
+  const cat = byId('eventCategory').value;
+
+  const filtered = sortEvents().filter(e =>
+    (!cat || e.category === cat) &&
+    (!term || `${e.name} ${e.category} ${vname(e.venue)}`.toLowerCase().includes(term))
+  );
+
+  byId('eventsTbody').innerHTML = eventRows(filtered, 'full');
+}
+
+function init() {
+  byId('menuToggle').addEventListener('click', () => {
+    const open = byId('sidebar').classList.toggle('open');
+    byId('mobileScrim').hidden = !open;
+    byId('menuToggle').setAttribute('aria-expanded', String(open));
+  });
+
+  byId('mobileScrim').addEventListener('click', closeMenu);
+
+  byId('newEvent').addEventListener('click', () => eventForm());
+
+  byId('notifications').addEventListener('click', () =>
+    modal(`${modalHeading(
+      'Avisos de demostración',
+      'Este panel no está conectado con notificaciones externas.'
+    )}
+    <div class="hint-box">
+      Este prototipo no recibe avisos municipales reales.
+      Comprueba los eventos, recintos y las tareas de demostración desde el panel.
+    </div>`)
+  );
+
+  document.addEventListener('click', onClick);
+
+  document.addEventListener('submit', e => {
+    if (e.target?.id === 'eventForm') {
+      e.preventDefault();
+      saveEvent(e.target);
+    }
+
+    if (e.target?.id === 'regForm') {
+      e.preventDefault();
+      saveRegistration(e.target);
+    }
+
+    if (e.target?.id === 'providerForm') {
+      e.preventDefault();
+      saveProvider(e.target);
+    }
+  });
+
+  document.addEventListener('change', e => {
+    if (e.target.matches('[data-task]')) {
+      const id = e.target.dataset.task;
+
+      data.tasksDone = e.target.checked
+        ? [...new Set([...data.tasksDone, id])]
+        : data.tasksDone.filter(x => x !== id);
+
+      save();
+      render();
+    }
+  });
+
+  document.addEventListener('input', e => {
+    if (e.target.id === 'eventSearch') filterEvents();
+  });
+
+  document.addEventListener('change', e => {
+    if (e.target.id === 'eventCategory') filterEvents();
+  });
+
+  byId('dialog').addEventListener('click', e => {
+    if (e.target === byId('dialog')) byId('dialog').close();
+  });
+
+  window.addEventListener('hashchange', () => {
+    route = location.hash.replace('#/', '');
+
+    if (!PAGES[route]) route = 'inicio';
+
+    render();
+    closeMenu();
+  });
+
+  route = location.hash.replace('#/', '');
+
+  if (!PAGES[route]) route = 'inicio';
+
+  render();
+}
+
+document.addEventListener('DOMContentLoaded', init);
